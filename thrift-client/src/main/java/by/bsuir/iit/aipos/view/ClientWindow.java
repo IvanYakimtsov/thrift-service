@@ -7,6 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -19,6 +22,11 @@ public class ClientWindow extends Application {
 
     private Stage connectionStage = new Stage();
     private Scene connectionScene;
+
+    private ImageChooser imageChooser = new ImageChooser();
+
+    private Alert infoDialog = new Alert(Alert.AlertType.INFORMATION);
+    private Alert warningDialog = new Alert(Alert.AlertType.WARNING);
 
     private MainController mainMainController;
     private ConnectionController connectionController;
@@ -40,10 +48,11 @@ public class ClientWindow extends Application {
     private void loadMainWindow() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/client.fxml"));
-        primaryScene = new Scene(loader.load(), 1240, 600);
+        primaryScene = new Scene(loader.load(), 600, 400);
         mainMainController = loader.getController();
         mainMainController.setClientWindow(this);
         mainMainController.setPrimaryStage(primaryStage);
+        imageChooser.setPrimaryStage(primaryStage);
     }
 
     private void loadConnectDialog() throws IOException {
@@ -65,12 +74,30 @@ public class ClientWindow extends Application {
         primaryStage.show();
     }
 
-    public boolean showConnectionDialog(String host, String port) {
+    public Image showImageChooser(TextField pathFiled) throws IOException {
+        return imageChooser.openImage(pathFiled);
+    }
+
+    public boolean showConnectionDialog(StringBuilder host, StringBuilder port) {
         connectionController.setClientWindow(this);
         connectionController.setConnectionStage(connectionStage);
         connectionController.setParameters(host, port);
         connectionStage.showAndWait();
         return connectionController.isOkClicked();
+    }
+
+    public void showInfoDialog(String title, String content) {
+        infoDialog.setTitle(title);
+        infoDialog.setHeaderText(null);
+        infoDialog.setContentText(content);
+        infoDialog.showAndWait();
+    }
+
+    public void shoWarningDialog(String title, String content) {
+        warningDialog.setTitle(title);
+        warningDialog.setHeaderText(null);
+        warningDialog.setContentText(content);
+        warningDialog.showAndWait();
     }
 
     public ObservableList<String> getObservableNameList() {

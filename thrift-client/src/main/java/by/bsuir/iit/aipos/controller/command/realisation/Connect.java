@@ -21,13 +21,14 @@ public class Connect implements ICommand {
 
     @Override
     public void execute() {
-        String host = "", port = "";
+        StringBuilder host = new StringBuilder(), port = new StringBuilder();
         if (clientWindow.showConnectionDialog(host, port)) {
             try {
-                connection.open(host, Integer.parseInt(port));
+                connection.open(host.toString(), Integer.parseInt(port.toString()));
                 tableView.getItems().addAll(connection.getArticleList());
+                clientWindow.showInfoDialog("Connection information", "Connected!");
             } catch (ConnectionException e) {
-                e.printStackTrace();
+                clientWindow.shoWarningDialog("Connection warning", e.getMessage());
             }
         }
     }
