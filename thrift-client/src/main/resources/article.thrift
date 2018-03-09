@@ -2,8 +2,9 @@ namespace java by.bsuir.iit.aipos.thrift
 
 struct Article {
     1 : string name
-    2 : binary photo
-    3 : string body
+    2 : binary image
+    3 : string imageFormat
+    4 : string body
 }
 
 enum ArticleParameters {

@@ -1,9 +1,9 @@
-package by.bsuir.iit.aipos.controller.command.realisation;
+package by.bsuir.iit.aipos.controller.command;
 
-import by.bsuir.iit.aipos.controller.command.ICommand;
+import by.bsuir.iit.aipos.controller.MainController;
 import by.bsuir.iit.aipos.service.Connection;
-import by.bsuir.iit.aipos.service.ConnectionException;
 import by.bsuir.iit.aipos.service.ServiceFactory;
+import by.bsuir.iit.aipos.service.excpetion.ConnectionException;
 import by.bsuir.iit.aipos.view.ClientWindow;
 import javafx.scene.control.TableView;
 
@@ -14,9 +14,9 @@ public class Connect implements ICommand {
     private ClientWindow clientWindow;
     private TableView<String> tableView;
 
-    public Connect(ClientWindow clientWindow, TableView<String> tableView) {
-        this.clientWindow = clientWindow;
-        this.tableView = tableView;
+    public Connect(MainController mainController) {
+        this.clientWindow = mainController.getClientWindow();
+        this.tableView = mainController.getPatternsTable();
     }
 
     @Override
@@ -28,9 +28,8 @@ public class Connect implements ICommand {
                 tableView.getItems().addAll(connection.getArticleList());
                 clientWindow.showInfoDialog("Connection information", "Connected!");
             } catch (ConnectionException e) {
-                clientWindow.shoWarningDialog("Connection warning", e.getMessage());
+                clientWindow.showWarningDialog("Connection warning", e.getMessage() + "!");
             }
         }
     }
-
 }

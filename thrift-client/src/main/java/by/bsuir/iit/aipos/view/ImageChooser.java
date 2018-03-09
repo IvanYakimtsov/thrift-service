@@ -6,12 +6,12 @@ import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import org.codehaus.plexus.util.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ImageChooser {
@@ -32,7 +32,7 @@ public class ImageChooser {
     public Image openImage(TextField pathFiled) throws IOException {
         File image = fileChooser.showOpenDialog(primaryStage);
         if (image != null) {
-            pathFiled.setText(image.getAbsolutePath());
+            pathFiled.setText(FileUtils.getExtension(image.getName()));
             BufferedImage bufferedImage = ImageIO.read(image);
             return SwingFXUtils.toFXImage(bufferedImage, null);
         } else {

@@ -5,6 +5,7 @@ public class ServiceFactory {
     private static final ServiceFactory instance = new ServiceFactory();
 
     private Connection connection = new Connection();
+    private ImageConverter imageConverter = new ImageConverter();
 
     private ServiceFactory() {}
 
@@ -14,5 +15,9 @@ public class ServiceFactory {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    public ImageConverter getImageConverter() {
+        return imageConverter;
     }
 }

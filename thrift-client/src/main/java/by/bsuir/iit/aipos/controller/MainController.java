@@ -1,6 +1,5 @@
 package by.bsuir.iit.aipos.controller;
 
-import by.bsuir.iit.aipos.controller.command.CommandDirector;
 import by.bsuir.iit.aipos.controller.command.ICommand;
 import by.bsuir.iit.aipos.view.ClientWindow;
 import javafx.beans.property.SimpleStringProperty;

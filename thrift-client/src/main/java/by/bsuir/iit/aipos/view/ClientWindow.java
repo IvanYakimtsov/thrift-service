@@ -93,7 +93,7 @@ public class ClientWindow extends Application {
         infoDialog.showAndWait();
     }
 
-    public void shoWarningDialog(String title, String content) {
+    public void showWarningDialog(String title, String content) {
         warningDialog.setTitle(title);
         warningDialog.setHeaderText(null);
         warningDialog.setContentText(content);

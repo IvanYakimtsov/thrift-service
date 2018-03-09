@@ -1,4 +1,4 @@
-package by.bsuir.iit.aipos.service;
+package by.bsuir.iit.aipos.service.excpetion;
 
 public class ConnectionException extends Exception {
 

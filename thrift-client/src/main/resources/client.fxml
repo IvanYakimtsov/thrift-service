@@ -95,9 +95,6 @@
                                           <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                              <children>
                                                 <ImageView fx:id="imageView" fitHeight="113.0" fitWidth="180.0" layoutX="20.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="107.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                                   <image>
-                                                      <Image url="@../Downloads/xSaFWlvKXWk.jpg" />
-                                                   </image>
                                                    <viewport>
                                                       <Rectangle2D />
                                                    </viewport></ImageView>
