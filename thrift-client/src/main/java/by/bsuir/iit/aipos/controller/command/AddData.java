@@ -25,22 +25,22 @@ public class AddData implements ICommand {
     private ClientWindow clientWindow;
     private TextField nameField;
     private TextArea bodyField;
-    private ImageView imageView;
+    private ImageView patternImage;
     private TextField formatField;
 
     public AddData(MainController mainController, IAddDataStrategy addDataStrategy) {
         this.addDataStrategy = addDataStrategy;
         this.clientWindow = mainController.getClientWindow();
-        this.nameField = mainController.getName();
-        this.bodyField = mainController.getBody();
-        this.imageView = mainController.getImage();
-        this.formatField = mainController.getPath();
+        this.nameField = mainController.getNameField();
+        this.bodyField = mainController.getBodyField();
+        this.patternImage = mainController.getImage();
+        this.formatField = mainController.getFormatField();
     }
 
     @Override
     public void execute() {
         try {
-            if (connection.isOpen() && imageView.getImage() != null) {
+            if (connection.isOpen() && patternImage.getImage() != null) {
                 Article article = prepareArticle();
                 addDataStrategy.execute(article);
             } else if (!connection.isOpen()) {
@@ -69,14 +69,14 @@ public class AddData implements ICommand {
 
     private void handleInvalidImage() {
         clientWindow.showWarningDialog("Invalid parameters", "Invalid image field!");
-        imageView.requestFocus();
+        patternImage.requestFocus();
     }
 
     private Article prepareArticle() throws IOException {
         Article article = new Article();
         article.setName(nameField.getText());
         article.setBody(bodyField.getText());
-        article.setImage(imageConverter.toByteArray(imageView.getImage(), formatField.getText()));
+        article.setImage(imageConverter.toByteArray(patternImage.getImage(), formatField.getText()));
         article.setImageFormat(formatField.getText());
         return article;
     }

@@ -12,20 +12,20 @@ public class Remove implements ICommand {
     private Connection connection = ServiceFactory.getInstance().getConnection();
 
     private ClientWindow clientWindow;
-    private TableView<String> tableView;
+    private TableView<String> patternsTable;
 
     public Remove(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.tableView = mainController.getPatternsTable();
+        this.patternsTable = mainController.getPatternsTable();
     }
 
     @Override
     public void execute() {
-        String articleName = tableView.getSelectionModel().getSelectedItem();
+        String articleName = patternsTable.getSelectionModel().getSelectedItem();
         try {
             if (connection.isOpen() && articleName != null) {
                 connection.removeArticle(articleName);
-                tableView.getItems().remove(articleName);
+                patternsTable.getItems().remove(articleName);
             } else if (!connection.isOpen()) {
                 clientWindow.showInfoDialog("Connected information", "Client is not connected!");
             } else {

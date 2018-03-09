@@ -15,9 +15,9 @@ public class MainController {
     private Stage primaryStage;
     @FXML private TableView<String> patternsTable;
     @FXML private TableColumn<String, String> nameList;
-    @FXML private TextArea body;
-    @FXML private TextField name, path;
-    @FXML private ImageView imageView;
+    @FXML private TextArea bodyField;
+    @FXML private TextField nameField, formatField;
+    @FXML private ImageView patternImage;
 
     private CommandDirector commandDirector;
 
@@ -56,19 +56,19 @@ public class MainController {
         return patternsTable;
     }
 
-    public TextArea getBody() {
-        return body;
+    public TextArea getBodyField() {
+        return bodyField;
     }
 
-    public TextField getName() {
-        return name;
+    public TextField getNameField() {
+        return nameField;
     }
 
-    public TextField getPath() {
-        return path;
+    public TextField getFormatField() {
+        return formatField;
     }
 
     public ImageView getImage() {
-        return imageView;
+        return patternImage;
     }
 }

@@ -22,22 +22,22 @@ public class Get implements ICommand {
     private ClientWindow clientWindow;
     private TextField nameField;
     private TextArea bodyField;
-    private ImageView imageView;
+    private ImageView patternImage;
     private TextField formatField;
-    private TableView<String> tableView;
+    private TableView<String> patternsTable;
 
     public Get(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.nameField = mainController.getName();
-        this.bodyField = mainController.getBody();
-        this.imageView = mainController.getImage();
-        this.tableView = mainController.getPatternsTable();
-        this.formatField = mainController.getPath();
+        this.nameField = mainController.getNameField();
+        this.bodyField = mainController.getBodyField();
+        this.patternImage = mainController.getImage();
+        this.patternsTable = mainController.getPatternsTable();
+        this.formatField = mainController.getFormatField();
     }
 
     @Override
     public void execute() {
-        String articleName = tableView.getSelectionModel().getSelectedItem();
+        String articleName = patternsTable.getSelectionModel().getSelectedItem();
         try {
             if (connection.isOpen() && articleName != null) {
                 Article article = connection.getArticle(articleName);
@@ -56,7 +56,7 @@ public class Get implements ICommand {
         try {
             nameField.setText(article.getName());
             bodyField.setText(article.getBody());
-            imageView.setImage(imageConverter.toImage(article.getImage()));
+            patternImage.setImage(imageConverter.toImage(article.getImage()));
             formatField.setText(article.getImageFormat());
         } catch (IOException e) {
             clientWindow.showInfoDialog("Get warning", "Unable to set article image!");

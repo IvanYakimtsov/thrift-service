@@ -19,19 +19,19 @@ public class UpdateOldArticle implements IAddDataStrategy {
     private ClientWindow clientWindow;
     private TextField nameField;
     private TextArea bodyField;
-    private TableView<String> tableView;
+    private TableView<String> patternsTable;
 
     public UpdateOldArticle(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.nameField = mainController.getName();
-        this.bodyField = mainController.getBody();
-        this.tableView = mainController.getPatternsTable();
+        this.nameField = mainController.getNameField();
+        this.bodyField = mainController.getBodyField();
+        this.patternsTable = mainController.getPatternsTable();
     }
 
     @Override
     public void execute(Article article) throws NameFieldException, BodyFieldException {
         try {
-            String articleName = tableView.getSelectionModel().getSelectedItem();
+            String articleName = patternsTable.getSelectionModel().getSelectedItem();
             if (articleName != null) {
                 connection.update(article);
                 confirmArticleFields(article);

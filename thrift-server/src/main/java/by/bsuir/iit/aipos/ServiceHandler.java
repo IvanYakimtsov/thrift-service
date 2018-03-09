@@ -12,6 +12,7 @@ public class ServiceHandler implements WebPatternsService.Iface {
 
     @Override
     public boolean addArticle(Article article) throws TException {
+        System.out.println();
         this.article = article;
         return true;
     }

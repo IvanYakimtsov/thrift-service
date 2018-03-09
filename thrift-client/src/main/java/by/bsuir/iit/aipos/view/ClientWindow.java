@@ -28,7 +28,7 @@ public class ClientWindow extends Application {
     private Alert infoDialog = new Alert(Alert.AlertType.INFORMATION);
     private Alert warningDialog = new Alert(Alert.AlertType.WARNING);
 
-    private MainController mainMainController;
+    private MainController mainController;
     private ConnectionController connectionController;
 
     private ObservableList<String> observableNameList = FXCollections.observableArrayList();
@@ -49,15 +49,15 @@ public class ClientWindow extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/client.fxml"));
         primaryScene = new Scene(loader.load(), 600, 400);
-        mainMainController = loader.getController();
-        mainMainController.setClientWindow(this);
-        mainMainController.setPrimaryStage(primaryStage);
+        mainController = loader.getController();
+        mainController.setClientWindow(this);
+        mainController.setPrimaryStage(primaryStage);
         imageChooser.setPrimaryStage(primaryStage);
     }
 
     private void loadConnectDialog() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/connectDialog.fxml"));
+        loader.setLocation(getClass().getResource("/connect-dialog.fxml"));
         connectionScene = new Scene(loader.load(), 250, 100);
         setConnectionStageParameters();
         connectionController = loader.getController();

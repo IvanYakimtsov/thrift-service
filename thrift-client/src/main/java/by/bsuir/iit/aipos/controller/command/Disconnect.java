@@ -11,18 +11,18 @@ public class Disconnect implements ICommand {
     private Connection connection = ServiceFactory.getInstance().getConnection();
 
     private ClientWindow clientWindow;
-    private TableView<String> tableView;
+    private TableView<String> patternsTable;
 
     public Disconnect(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.tableView = mainController.getPatternsTable();
+        this.patternsTable = mainController.getPatternsTable();
     }
 
     @Override
     public void execute() {
         if (connection.isOpen()) {
             connection.close();
-            tableView.getItems().clear();
+            patternsTable.getItems().clear();
             clientWindow.showInfoDialog("Disconnect information", "Disconnected!");
         } else {
             clientWindow.showInfoDialog("Disconnect information", "Client is not connected!");

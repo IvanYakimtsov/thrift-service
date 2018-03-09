@@ -12,11 +12,11 @@ public class Connect implements ICommand {
     private Connection connection = ServiceFactory.getInstance().getConnection();
 
     private ClientWindow clientWindow;
-    private TableView<String> tableView;
+    private TableView<String> patternsTable;
 
     public Connect(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.tableView = mainController.getPatternsTable();
+        this.patternsTable = mainController.getPatternsTable();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Connect implements ICommand {
         if (clientWindow.showConnectionDialog(host, port)) {
             try {
                 connection.open(host.toString(), Integer.parseInt(port.toString()));
-                tableView.getItems().addAll(connection.getArticleList());
+                patternsTable.getItems().addAll(connection.getArticleList());
                 clientWindow.showInfoDialog("Connection information", "Connected!");
             } catch (ConnectionException e) {
                 clientWindow.showWarningDialog("Connection warning", e.getMessage() + "!");

@@ -11,13 +11,13 @@ import java.io.IOException;
 public class Browse implements ICommand {
 
     private ClientWindow clientWindow;
-    private ImageView imageView;
+    private ImageView patternImage;
     private TextField formatField;
 
     public Browse(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.imageView = mainController.getImage();
-        this.formatField = mainController.getPath();
+        this.patternImage = mainController.getImage();
+        this.formatField = mainController.getFormatField();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Browse implements ICommand {
         try {
             Image image = clientWindow.showImageChooser(formatField);
             if (image != null) {
-                imageView.setImage(image);
+                patternImage.setImage(image);
             }
         } catch (IOException e) {
             clientWindow.showWarningDialog("Browse warning", "Unable to open image!");

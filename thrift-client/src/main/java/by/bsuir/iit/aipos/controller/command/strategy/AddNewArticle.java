@@ -19,13 +19,13 @@ public class AddNewArticle implements IAddDataStrategy {
     private ClientWindow clientWindow;
     private TextField nameField;
     private TextArea bodyField;
-    private TableView<String> tableView;
+    private TableView<String> patternsTable;
 
     public AddNewArticle(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
-        this.nameField = mainController.getName();
-        this.bodyField = mainController.getBody();
-        this.tableView = mainController.getPatternsTable();
+        this.nameField = mainController.getNameField();
+        this.bodyField = mainController.getBodyField();
+        this.patternsTable = mainController.getPatternsTable();
     }
 
     @Override
@@ -44,6 +44,6 @@ public class AddNewArticle implements IAddDataStrategy {
     private void confirmArticleFields(Article article) {
         nameField.setText(article.getName());
         bodyField.setText(article.getBody());
-        tableView.getItems().add(article.getName());
+        patternsTable.getItems().add(article.getName());
     }
 }
