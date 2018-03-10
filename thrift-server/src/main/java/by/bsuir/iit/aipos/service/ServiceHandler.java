@@ -1,4 +1,4 @@
-package by.bsuir.iit.aipos;
+package by.bsuir.iit.aipos.service;
 
 import by.bsuir.iit.aipos.thrift.Article;
 import by.bsuir.iit.aipos.thrift.WebPatternsService;

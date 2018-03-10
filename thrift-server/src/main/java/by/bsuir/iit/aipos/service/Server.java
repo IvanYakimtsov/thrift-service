@@ -1,6 +1,5 @@
 package by.bsuir.iit.aipos.service;
 
-import by.bsuir.iit.aipos.ServiceHandler;
 import by.bsuir.iit.aipos.thrift.WebPatternsService;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
@@ -24,6 +23,10 @@ public class Server {
 
     public void stop() {
         server.stop();
+    }
+
+    public boolean isServing() {
+        return server.isServing();
     }
 
     private void serve(int port) {
