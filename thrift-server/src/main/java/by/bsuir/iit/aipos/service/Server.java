@@ -1,6 +1,6 @@
 package by.bsuir.iit.aipos.service;
 
-import by.bsuir.iit.aipos.controller.MainController;
+import by.bsuir.iit.aipos.controller.ServerController;
 import by.bsuir.iit.aipos.thrift.WebPatternsService;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
@@ -40,7 +40,7 @@ public class Server {
         }
     }
 
-    public void setController(MainController mainController) {
-        serviceHandler.setMainController(mainController);
+    public void setController(ServerController serverController) {
+        serviceHandler.setServerController(serverController);
     }
 }

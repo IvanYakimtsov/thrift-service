@@ -34,7 +34,7 @@ public class UpdateOldArticle implements IAddDataStrategy {
             String articleName = patternsTable.getSelectionModel().getSelectedItem();
             if (articleName != null) {
                 connection.update(articleName, article);
-                confirmArticleFields(article);
+                confirmArticleFields(article, articleName);
             } else {
                 clientWindow.showInfoDialog("Get information", "Select article name from the table!");
             }
@@ -43,8 +43,10 @@ public class UpdateOldArticle implements IAddDataStrategy {
         }
     }
 
-    private void confirmArticleFields(Article article) {
+    private void confirmArticleFields(Article article, String articleName) {
         nameField.setText(article.getName());
         bodyField.setText(article.getBody());
+        int articleIndex = patternsTable.getItems().indexOf(articleName);
+        patternsTable.getItems().set(articleIndex, article.getName());
     }
 }

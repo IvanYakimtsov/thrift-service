@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 import java.util.Date;
 
-public class MainController {
+public class ServerController {
 
     private final String PORT_REGEXP = "^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$";
     private final String CRLF = "\r\n";
@@ -25,7 +25,7 @@ public class MainController {
     @FXML private CheckBox statusBox;
     @FXML private TextArea logInfo;
 
-    public MainController() {
+    public ServerController() {
         server.setController(this);
     }
 

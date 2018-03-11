@@ -1,6 +1,6 @@
 package by.bsuir.iit.aipos.view;
 
-import by.bsuir.iit.aipos.controller.MainController;
+import by.bsuir.iit.aipos.controller.ServerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,7 +17,7 @@ public class ServerWindow extends Application{
     private Alert infoDialog = new Alert(Alert.AlertType.INFORMATION);
     private Alert warningDialog = new Alert(Alert.AlertType.WARNING);
 
-    private MainController mainController;
+    private ServerController serverController;
 
     public static void main(String[] args) {
         launch(args);
@@ -34,9 +34,9 @@ public class ServerWindow extends Application{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/server.fxml"));
         primaryScene = new Scene(loader.load(), 600, 400);
-        mainController = loader.getController();
-        mainController.setServerWindow(this);
-        mainController.setPrimaryStage(primaryStage);
+        serverController = loader.getController();
+        serverController.setServerWindow(this);
+        serverController.setPrimaryStage(primaryStage);
     }
 
     private void showMainWindow() {

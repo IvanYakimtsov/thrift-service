@@ -71,4 +71,5 @@ public class MainController {
     public ImageView getImage() {
         return patternImage;
     }
+
 }
