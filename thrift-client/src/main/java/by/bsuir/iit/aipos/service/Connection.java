@@ -4,6 +4,7 @@ import by.bsuir.iit.aipos.service.excpetion.BodyFieldException;
 import by.bsuir.iit.aipos.service.excpetion.ConnectionException;
 import by.bsuir.iit.aipos.service.excpetion.NameFieldException;
 import by.bsuir.iit.aipos.thrift.Article;
+import by.bsuir.iit.aipos.thrift.ServiceServerException;
 import by.bsuir.iit.aipos.thrift.WebPatternsService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -65,15 +66,17 @@ public class Connection {
     public Article getArticle(String articleName) throws ConnectionException {
         try {
             return client.getArticle(articleName);
+        } catch (ServiceServerException e) {
+            throw new ConnectionException(e.getMessage(), e);
         } catch (TException e) {
             throw new ConnectionException("Unable to get article " + "\"" + articleName + "\"", e);
         }
     }
 
-    public boolean update(Article article) throws ConnectionException, NameFieldException, BodyFieldException {
+    public boolean update(String articleName, Article article) throws ConnectionException, NameFieldException, BodyFieldException {
         try {
             if (isValidName(article) && isValidBody(article)) {
-                return client.update(article);
+                return client.update(articleName, article);
             } else if (!isValidName(article)) {
                 throw new NameFieldException("Invalid pattern name");
             } else {
@@ -94,20 +97,12 @@ public class Connection {
 
     private boolean isValidName(Article article) {
         article.setName(defuseString(article.getName()));
-        if (!article.getName().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return !article.getName().isEmpty();
     }
 
     private boolean isValidBody(Article article) {
         article.setBody(defuseString(article.getBody()));
-        if (!article.getBody().isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return !article.getBody().isEmpty();
     }
 
     private String defuseString(String string) {

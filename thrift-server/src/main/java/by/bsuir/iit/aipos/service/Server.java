@@ -1,5 +1,6 @@
 package by.bsuir.iit.aipos.service;
 
+import by.bsuir.iit.aipos.controller.MainController;
 import by.bsuir.iit.aipos.thrift.WebPatternsService;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
@@ -11,9 +12,9 @@ public class Server {
 
     private TServer server;
     private WebPatternsService.Processor<WebPatternsService.Iface> processor;
+    private ServiceHandler serviceHandler = new ServiceHandler();
 
     public Server() {
-        ServiceHandler serviceHandler = new ServiceHandler();
         processor = new WebPatternsService.Processor<>(serviceHandler);
     }
 
@@ -26,7 +27,7 @@ public class Server {
     }
 
     public boolean isServing() {
-        return server.isServing();
+        return server != null && server.isServing();
     }
 
     private void serve(int port) {
@@ -37,5 +38,9 @@ public class Server {
         } catch (TTransportException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setController(MainController mainController) {
+        serviceHandler.setMainController(mainController);
     }
 }

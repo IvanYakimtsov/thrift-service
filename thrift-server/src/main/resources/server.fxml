@@ -16,8 +16,8 @@
    <top>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="startButton" mnemonicParsing="false" onAction="#buttonHandler" text="Start" />
-            <Button fx:id="stopButton" mnemonicParsing="false" onAction="#buttonHandler" text="Stop" />
+          <Button fx:id="startButton" mnemonicParsing="false" onAction="#startHandler" text="Start" />
+            <Button fx:id="stopButton" mnemonicParsing="false" onAction="#stopHandler" text="Stop" />
             <TextField fx:id="portField" />
             <CheckBox fx:id="statusBox" focusTraversable="false" mnemonicParsing="false" mouseTransparent="true" text="Active" />
         </items>

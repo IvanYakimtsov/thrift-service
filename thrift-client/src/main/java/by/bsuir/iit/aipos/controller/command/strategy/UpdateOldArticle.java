@@ -33,9 +33,9 @@ public class UpdateOldArticle implements IAddDataStrategy {
         try {
             String articleName = patternsTable.getSelectionModel().getSelectedItem();
             if (articleName != null) {
-                connection.update(article);
+                connection.update(articleName, article);
                 confirmArticleFields(article);
-            } else if (articleName == null) {
+            } else {
                 clientWindow.showInfoDialog("Get information", "Select article name from the table!");
             }
         } catch (ConnectionException e) {

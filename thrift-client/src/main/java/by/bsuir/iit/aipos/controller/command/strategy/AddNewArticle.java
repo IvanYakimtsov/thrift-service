@@ -37,6 +37,7 @@ public class AddNewArticle implements IAddDataStrategy {
                 clientWindow.showInfoDialog("Add article information", "Article \"" + article.getName() + "\" already exists!");
             }
         } catch (ConnectionException e) {
+            e.printStackTrace();
             clientWindow.showWarningDialog("Add article warning", e.getMessage() + "!");
         }
     }

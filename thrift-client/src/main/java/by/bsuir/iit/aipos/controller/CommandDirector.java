@@ -19,6 +19,7 @@ public class CommandDirector {
         commandMap.put(Command.GET, new Get(controller));
         commandMap.put(Command.REMOVE, new Remove(controller));
         commandMap.put(Command.UPDATE, new AddData(controller, new UpdateOldArticle(controller)));
+        commandMap.put(Command.UPDATE_TABLE, new UpdateTable(controller));
         commandMap.put(Command.BROWSE, new Browse(controller));
     }
 
