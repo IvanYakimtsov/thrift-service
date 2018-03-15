@@ -194,5 +194,4 @@ public final class ConnectionPool {
             throw new ConnectionPoolException("Closing result set error", e);
         }
     }
-
 }
