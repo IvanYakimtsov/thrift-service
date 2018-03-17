@@ -1,6 +1,7 @@
 package by.bsuir.iit.aipos.controller;
 
 import by.bsuir.iit.aipos.controller.command.ICommand;
+import by.bsuir.iit.aipos.thrift.Header;
 import by.bsuir.iit.aipos.view.ClientWindow;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -13,8 +14,9 @@ public class MainController {
 
     private ClientWindow clientWindow;
     private Stage primaryStage;
-    @FXML private TableView<String> patternsTable;
-    @FXML private TableColumn<String, String> nameList;
+    @FXML private TableView<Header> patternsTable;
+    @FXML private TableColumn<Header, String> authorList;
+    @FXML private TableColumn<Header, String> patternList;
     @FXML private TextArea bodyField;
     @FXML private TextField nameField, formatField;
     @FXML private ImageView patternImage;
@@ -23,7 +25,8 @@ public class MainController {
 
     @FXML
     private void initialize() {
-        nameList.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+        authorList.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getAuthorEmail()));
+        patternList.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPatternName()));
     }
 
     public void buttonHandler(ActionEvent actionEvent) {
@@ -52,7 +55,7 @@ public class MainController {
         return clientWindow;
     }
 
-    public TableView<String> getPatternsTable() {
+    public TableView<Header> getPatternsTable() {
         return patternsTable;
     }
 

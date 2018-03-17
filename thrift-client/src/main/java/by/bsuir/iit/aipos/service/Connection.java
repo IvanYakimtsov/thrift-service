@@ -1,11 +1,10 @@
 package by.bsuir.iit.aipos.service;
 
+import by.bsuir.iit.aipos.service.excpetion.AuthorEmailException;
 import by.bsuir.iit.aipos.service.excpetion.BodyFieldException;
 import by.bsuir.iit.aipos.service.excpetion.ConnectionException;
 import by.bsuir.iit.aipos.service.excpetion.NameFieldException;
-import by.bsuir.iit.aipos.thrift.Article;
-import by.bsuir.iit.aipos.thrift.ServiceServerException;
-import by.bsuir.iit.aipos.thrift.WebPatternsService;
+import by.bsuir.iit.aipos.thrift.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.TSocket;
@@ -19,6 +18,7 @@ public class Connection {
     private final String SPACE_BEGIN = "^\\s+";
     private final String SPACE_MIDDLE = "\\s\\s+";
     private final String SPACE_LAST = "\\s$";
+    private final String EMAIL_REGEX = "^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$";
 
     private TTransport dataTransport;
     private WebPatternsService.Client client;
@@ -41,53 +41,61 @@ public class Connection {
         return dataTransport != null && dataTransport.isOpen();
     }
 
-    public boolean addArticle(Article article) throws ConnectionException, NameFieldException, BodyFieldException {
+    public boolean addArticle(Article article) throws ConnectionException, NameFieldException, BodyFieldException, AuthorEmailException {
         try {
-            if (isValidName(article) && isValidBody(article)) {
-                return client.addArticle(article);
-            } else if (!isValidName(article)) {
-                throw new NameFieldException("Invalid pattern name");
-            } else {
-                throw new BodyFieldException("Invalid pattern body");
+            if (!isValid(article)) {
+                handleInvalidArticle(article);
             }
+            return client.addArticle(article);
         } catch (TException e) {
             throw new ConnectionException("Unable to add new article", e);
         }
     }
 
-    public boolean removeArticle(String articleName) throws ConnectionException {
+    private boolean isValid(Article article) {
+        return isValidName(article.getHeader()) && isValidBody(article.getContent()) && isValidAuthorName(article.getHeader());
+    }
+
+    public boolean removeArticle(Header header) throws ConnectionException {
         try {
-            return client.removeArticle(articleName);
+            return client.removeArticle(header);
         } catch (TException e) {
-            throw new ConnectionException("Unable to remove article " + "\"" + articleName + "\"", e);
+            throw new ConnectionException("Unable to remove article " + "\"" + header.getPatternName() + "\"", e);
         }
     }
 
-    public Article getArticle(String articleName) throws ConnectionException {
+    public Content getArticle(Header header) throws ConnectionException {
         try {
-            return client.getArticle(articleName);
+            return client.getArticle(header);
         } catch (ServiceServerException e) {
             throw new ConnectionException(e.getMessage(), e);
         } catch (TException e) {
-            throw new ConnectionException("Unable to get article " + "\"" + articleName + "\"", e);
+            throw new ConnectionException("Unable to get article " + "\"" + header.getPatternName() + "\"", e);
         }
     }
 
-    public boolean update(String articleName, Article article) throws ConnectionException, NameFieldException, BodyFieldException {
+    public boolean updateArticle(Header header, Article modifyArticle) throws ConnectionException, NameFieldException, BodyFieldException, AuthorEmailException {
         try {
-            if (isValidName(article) && isValidBody(article)) {
-                return client.update(articleName, article);
-            } else if (!isValidName(article)) {
-                throw new NameFieldException("Invalid pattern name");
-            } else {
-                throw new BodyFieldException("Invalid pattern body");
+            if (!isValid(modifyArticle)) {
+                handleInvalidArticle(modifyArticle);
             }
+            return client.updateArticle(header, modifyArticle);
         } catch (TException e) {
-            throw new ConnectionException("Unable to update article " + "\"" + article.getName() + "\"", e);
+            throw new ConnectionException("Unable to updateArticle article " + "\"" + header.getPatternName() + "\"", e);
         }
     }
 
-    public List<String> getArticleList() throws ConnectionException {
+    private void handleInvalidArticle(Article article) throws NameFieldException, AuthorEmailException, BodyFieldException {
+        if (!isValidName(article.getHeader())) {
+            throw new NameFieldException("Invalid pattern name");
+        } else if (!isValidAuthorName(article.getHeader())) {
+            throw new AuthorEmailException("Invalid author email");
+        } else {
+            throw new BodyFieldException("Invalid pattern body");
+        }
+    }
+
+    public List<Header> getArticleList() throws ConnectionException {
         try {
             return client.getArticleList();
         } catch (TException e) {
@@ -95,14 +103,19 @@ public class Connection {
         }
     }
 
-    private boolean isValidName(Article article) {
-        article.setName(defuseString(article.getName()));
-        return !article.getName().isEmpty();
+    private boolean isValidName(Header header) {
+        header.setPatternName(defuseString(header.getPatternName()));
+        return !header.getPatternName().isEmpty();
     }
 
-    private boolean isValidBody(Article article) {
-        article.setBody(defuseString(article.getBody()));
-        return !article.getBody().isEmpty();
+    private boolean isValidBody(Content content) {
+        content.setBody(defuseString(content.getBody()));
+        return !content.getBody().isEmpty();
+    }
+
+    private boolean isValidAuthorName(Header header) {
+        header.setAuthorEmail(defuseString(header.getAuthorEmail()));
+        return header.getAuthorEmail().matches(EMAIL_REGEX);
     }
 
     private String defuseString(String string) {

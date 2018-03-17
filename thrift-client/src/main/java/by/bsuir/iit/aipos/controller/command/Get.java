@@ -5,7 +5,8 @@ import by.bsuir.iit.aipos.service.Connection;
 import by.bsuir.iit.aipos.service.ImageConverter;
 import by.bsuir.iit.aipos.service.ServiceFactory;
 import by.bsuir.iit.aipos.service.excpetion.ConnectionException;
-import by.bsuir.iit.aipos.thrift.Article;
+import by.bsuir.iit.aipos.thrift.Content;
+import by.bsuir.iit.aipos.thrift.Header;
 import by.bsuir.iit.aipos.view.ClientWindow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -24,7 +25,7 @@ public class Get implements ICommand {
     private TextArea bodyField;
     private ImageView patternImage;
     private TextField formatField;
-    private TableView<String> patternsTable;
+    private TableView<Header> patternsTable;
 
     public Get(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
@@ -37,27 +38,30 @@ public class Get implements ICommand {
 
     @Override
     public void execute() {
-        String articleName = patternsTable.getSelectionModel().getSelectedItem();
+        Header selectedArticle = patternsTable.getSelectionModel().getSelectedItem();
         try {
-            if (connection.isOpen() && articleName != null) {
-                Article article = connection.getArticle(articleName);
-                confirmArticleFields(article);
+            Content content;
+            if (connection.isOpen() && selectedArticle != null && (content = connection.getArticle(selectedArticle)) != null) {
+                confirmArticleFields(selectedArticle.getPatternName(), content);
             } else if (!connection.isOpen()) {
                 clientWindow.showInfoDialog("Connected information", "Client is not connected!");
-            } else {
+            } else if (selectedArticle == null) {
                 clientWindow.showInfoDialog("Get information", "Select article name from the table!");
+            } else {
+                String contentMessage = selectedArticle.getAuthorEmail() + " article \"" + selectedArticle.getPatternName() + "\" already exists!";
+                clientWindow.showInfoDialog("Remove information", contentMessage);
             }
         } catch (ConnectionException e) {
             clientWindow.showWarningDialog("Get warning", e.getMessage() + "!");
         }
     }
 
-    private void confirmArticleFields(Article article) {
+    private void confirmArticleFields(String patternName, Content content) {
         try {
-            nameField.setText(article.getName());
-            bodyField.setText(article.getBody());
-            patternImage.setImage(imageConverter.toImage(article.getImage()));
-            formatField.setText(article.getImageFormat());
+            nameField.setText(patternName);
+            bodyField.setText(content.getBody());
+            patternImage.setImage(imageConverter.toImage(content.getImage()));
+            formatField.setText(content.getImageFormat());
         } catch (IOException e) {
             clientWindow.showInfoDialog("Get warning", "Unable to set article image!");
         }

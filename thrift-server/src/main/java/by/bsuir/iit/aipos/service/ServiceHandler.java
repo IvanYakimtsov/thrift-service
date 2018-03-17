@@ -4,9 +4,7 @@ import by.bsuir.iit.aipos.controller.ServerController;
 import by.bsuir.iit.aipos.dao.DAOFactory;
 import by.bsuir.iit.aipos.dao.ISQLArticleDAO;
 import by.bsuir.iit.aipos.dao.exception.DAOException;
-import by.bsuir.iit.aipos.thrift.Article;
-import by.bsuir.iit.aipos.thrift.ServiceServerException;
-import by.bsuir.iit.aipos.thrift.WebPatternsService;
+import by.bsuir.iit.aipos.thrift.*;
 import org.apache.thrift.TException;
 
 import java.util.List;
@@ -20,9 +18,10 @@ public class ServiceHandler implements WebPatternsService.Iface {
     @Override
     public boolean addArticle(Article article) throws TException {
         try {
-            if (articleDAO.getArticle(article.getName()) == null) {
+            Header header = article.getHeader();
+            if (articleDAO.getArticle(header) == null) {
                 articleDAO.addArticle(article);
-                serverController.log("add new article \"" + article.getName() + "\"");
+                serverController.log(header.authorEmail + " add new article \"" + header.getPatternName() + "\"");
                 return true;
             } else {
                 return false;
@@ -34,11 +33,15 @@ public class ServiceHandler implements WebPatternsService.Iface {
     }
 
     @Override
-    public boolean removeArticle(String articleName) throws TException {
+    public boolean removeArticle(Header header) throws TException {
         try {
-            boolean removeStatus = articleDAO.removeArticle(articleName) != 0;
-            serverController.log("remove article \"" + articleName + "\"");
-            return  removeStatus;
+            if (articleDAO.getArticle(header) != null) {
+                articleDAO.removeArticle(header);
+                serverController.log("remove article " + header.getAuthorEmail() +  " \"" + header.getPatternName() + "\"");
+                return  true;
+            } else {
+                return false;
+            }
         } catch (DAOException e) {
             serverController.log(e.getMessage());
             throw new ServiceServerException(e.getMessage());
@@ -46,20 +49,27 @@ public class ServiceHandler implements WebPatternsService.Iface {
     }
 
     @Override
-    public Article getArticle(String articleName) throws TException {
+    public Content getArticle(Header header) throws TException {
         try {
-            return articleDAO.getArticle(articleName);
+            return articleDAO.getArticle(header);
         } catch (DAOException e) {
             throw new ServiceServerException(e.getMessage());
         }
     }
 
     @Override
-    public boolean update(String articleName, Article article) throws TException {
+    public boolean updateArticle(Header header, Article modifyArticle) throws TException {
         try {
-            boolean updateStatus = articleDAO.update(articleName, article) != 0;
-            serverController.log("update article \"" + articleName + "\"");
-            return updateStatus;
+            if (articleDAO.getArticle(modifyArticle.getHeader()) == null) {
+                articleDAO.updateArticle(header, modifyArticle);
+                Header modifyHeader = modifyArticle.getHeader();
+                serverController.log(modifyHeader.getAuthorEmail() +
+                        " update article " + header.getAuthorEmail() + " \"" + header.getPatternName() + "\"" +
+                        ", new article header: " + modifyHeader.getAuthorEmail() + " \"" + modifyHeader.getPatternName() + "\"");
+                return true;
+            } else {
+                return false;
+            }
         } catch (DAOException e) {
             serverController.log(e.getMessage());
             throw new ServiceServerException(e.getMessage());
@@ -67,7 +77,7 @@ public class ServiceHandler implements WebPatternsService.Iface {
     }
 
     @Override
-    public List<String> getArticleList() throws TException {
+    public List<Header> getArticleList() throws TException {
         try {
             return articleDAO.getArticleList();
         } catch (DAOException e) {

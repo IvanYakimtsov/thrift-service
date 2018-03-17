@@ -2,6 +2,7 @@ package by.bsuir.iit.aipos.view;
 
 import by.bsuir.iit.aipos.controller.ConnectionController;
 import by.bsuir.iit.aipos.controller.MainController;
+import by.bsuir.iit.aipos.thrift.Header;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,11 +10,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class ClientWindow extends Application {
 
@@ -27,11 +30,12 @@ public class ClientWindow extends Application {
 
     private Alert infoDialog = new Alert(Alert.AlertType.INFORMATION);
     private Alert warningDialog = new Alert(Alert.AlertType.WARNING);
+    private TextInputDialog inputDialog = new TextInputDialog();
 
     private MainController mainController;
     private ConnectionController connectionController;
 
-    private ObservableList<String> observableNameList = FXCollections.observableArrayList();
+    private ObservableList<Header> observableNameList = FXCollections.observableArrayList();
 
     public static void main(String[] args) {
         launch(args);
@@ -47,8 +51,8 @@ public class ClientWindow extends Application {
 
     private void loadMainWindow() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/client.fxml"));
-        primaryScene = new Scene(loader.load(), 600, 400);
+        loader.setLocation(getClass().getResource(ViewConfig.MAIN_WINDOW_FXML));
+        primaryScene = new Scene(loader.load(), ViewConfig.MAIN_WINDOW_WIDTH, ViewConfig.MAIN_WINDOW_HEIGHT);
         mainController = loader.getController();
         mainController.setClientWindow(this);
         mainController.setPrimaryStage(primaryStage);
@@ -57,8 +61,8 @@ public class ClientWindow extends Application {
 
     private void loadConnectDialog() throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/connect-dialog.fxml"));
-        connectionScene = new Scene(loader.load(), 250, 100);
+        loader.setLocation(getClass().getResource(ViewConfig.CONNECT_DIALOG_FXML));
+        connectionScene = new Scene(loader.load(), ViewConfig.CONNECT_DIALOG_WIDTH, ViewConfig.CONNECT_DIALOG_HEIGHT);
         setConnectionStageParameters();
         connectionController = loader.getController();
     }
@@ -100,7 +104,25 @@ public class ClientWindow extends Application {
         warningDialog.showAndWait();
     }
 
-    public ObservableList<String> getObservableNameList() {
+    public boolean showInputDialog(String title, String content, StringBuilder authorEmail) {
+        inputDialog.setTitle(title);
+        inputDialog.setHeaderText(null);
+        inputDialog.setContentText(content);
+        return handleInput(authorEmail);
+
+    }
+
+    private boolean handleInput(StringBuilder authorEmail) {
+        Optional<String> result = inputDialog.showAndWait();
+        if (result.isPresent()) {
+            authorEmail.append(result.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public ObservableList<Header> getObservableNameList() {
         return observableNameList;
     }
 }

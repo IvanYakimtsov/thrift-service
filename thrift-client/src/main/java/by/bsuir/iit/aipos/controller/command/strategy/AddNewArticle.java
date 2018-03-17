@@ -3,10 +3,13 @@ package by.bsuir.iit.aipos.controller.command.strategy;
 import by.bsuir.iit.aipos.controller.MainController;
 import by.bsuir.iit.aipos.service.Connection;
 import by.bsuir.iit.aipos.service.ServiceFactory;
+import by.bsuir.iit.aipos.service.excpetion.AuthorEmailException;
 import by.bsuir.iit.aipos.service.excpetion.BodyFieldException;
 import by.bsuir.iit.aipos.service.excpetion.ConnectionException;
 import by.bsuir.iit.aipos.service.excpetion.NameFieldException;
 import by.bsuir.iit.aipos.thrift.Article;
+import by.bsuir.iit.aipos.thrift.Content;
+import by.bsuir.iit.aipos.thrift.Header;
 import by.bsuir.iit.aipos.view.ClientWindow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -19,7 +22,7 @@ public class AddNewArticle implements IAddDataStrategy {
     private ClientWindow clientWindow;
     private TextField nameField;
     private TextArea bodyField;
-    private TableView<String> patternsTable;
+    private TableView<Header> patternsTable;
 
     public AddNewArticle(MainController mainController) {
         this.clientWindow = mainController.getClientWindow();
@@ -29,22 +32,23 @@ public class AddNewArticle implements IAddDataStrategy {
     }
 
     @Override
-    public void execute(Article article) throws NameFieldException, BodyFieldException {
+    public void execute(Article article) throws NameFieldException, BodyFieldException, AuthorEmailException {
         try {
             if (connection.addArticle(article)) {
                 confirmArticleFields(article);
             } else {
-                clientWindow.showInfoDialog("Add article information", "Article \"" + article.getName() + "\" already exists!");
+                Header header = article.getHeader();
+                String content = header.getAuthorEmail() + " article \"" + header.getPatternName() + "\" already exists!";
+                clientWindow.showInfoDialog("Add article information", content);
             }
         } catch (ConnectionException e) {
-            e.printStackTrace();
             clientWindow.showWarningDialog("Add article warning", e.getMessage() + "!");
         }
     }
 
-    private void confirmArticleFields(Article article) {
-        nameField.setText(article.getName());
-        bodyField.setText(article.getBody());
-        patternsTable.getItems().add(article.getName());
+    private void confirmArticleFields(Article article) throws ConnectionException {
+        nameField.setText(article.getHeader().patternName);
+        bodyField.setText(article.getContent().getBody());
+        patternsTable.getItems().add(article.getHeader());
     }
 }
